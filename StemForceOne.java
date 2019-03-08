@@ -6,6 +6,9 @@ import java.io.*;
 import java.lang.*;
 import java.nio.file.*;
 import java.util.*;
+
+import opennlp.tools.tokenize.*;
+import opennlp.tools.stemmer.*;
 import opennlp.tools.stemmer.snowball.*;
 
 class StemForceOne {
@@ -103,9 +106,10 @@ class StemForceOne {
         
         return bob.toString();
     }
-    
+
     public static void main(String[] args) {
-        SnowballStemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
+        Tokenizer tokenizer = SimpleTokenizer.INSTANCE;
+        Stemmer stemmer = new SnowballStemmer(SnowballStemmer.ALGORITHM.ENGLISH);
         
         String inPath = args[0];
         String inContent = fileToString(inPath);
@@ -118,11 +122,22 @@ class StemForceOne {
         for (int i = 0; i < tweets.size(); i++) {
             Tweet tweet = tweets.get(i);
             
-            for (String word : tweet.content.split("[^A-Za-z0-9]")) {
-                if (word.length() < 1) continue;
-                word = word.toLowerCase();
+            for (String token : tokenizer.tokenize(tweet.content)) {
+                if (token.length() < 1) continue;
                 
-                String stemString = stemmer.stem(word).toString();
+                token = token.toLowerCase();
+                
+                if (token.equals("@")) continue;
+                if (token.equals("#")) continue;
+                if (token.equals("a")) continue;
+                if (token.equals("the")) continue;
+                if (token.equals("of")) continue;
+                if (token.equals("is")) continue;
+                if (token.equals("it")) continue;
+                if (token.equals("in")) continue;
+                if (token.equals("on")) continue;
+
+                String stemString = stemmer.stem(token).toString();
                 Stem stem = stems.get(stemString);
                 
                 if (stem == null) {
@@ -137,8 +152,8 @@ class StemForceOne {
                 }
                 
                 stem.count++;
-                stem.versions.putIfAbsent(word, 0);
-                stem.versions.merge(word, 1, Integer::sum);
+                stem.versions.putIfAbsent(token, 0);
+                stem.versions.merge(token, 1, Integer::sum);
                 
                 tweet.stems.add(stem);
             }
