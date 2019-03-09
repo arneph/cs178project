@@ -67,20 +67,32 @@ class StemForceOne {
     }
     
     static String tweetsToCSV(ArrayList<Tweet> tweets) {
+        int maxStems = 0;
+        for (Tweet tweet : tweets) {
+            maxStems = Math.max(maxStems, tweet.stems.size());
+        }
+        
         StringBuilder bob = new StringBuilder();
-        bob.append(",Stems,Label\n");
+        bob.append(",Label");
+        
+        for (int i = 0; i < maxStems; i++)
+            bob.append(",Stem" + i);
+        bob.append("\n");
         
         for (Tweet tweet : tweets) {
             bob.append(tweet.index);
-            bob.append(",{");
-            for (int i = 0; i < tweet.stems.size(); i++) {
-                Stem stem = tweet.stems.get(i);
-                
-                if (i > 0) bob.append(",");
-                bob.append(stem.index);
-            }
-            bob.append("},");
+            bob.append(",");
             bob.append(tweet.label);
+            for (int i = 0; i < maxStems; i++) {
+                bob.append(",");
+                if (i >= tweet.stems.size()) {
+                    bob.append("0");
+                }else{
+                    Stem stem = tweet.stems.get(i);
+                    
+                    bob.append(stem.index + 1);
+                }
+            }
             bob.append("\n");
         }
         
