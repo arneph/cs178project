@@ -11,7 +11,7 @@ import opennlp.tools.tokenize.*;
 import opennlp.tools.stemmer.*;
 import opennlp.tools.stemmer.snowball.*;
 
-class StemForceOne {
+class TweetStemmer {
   static String fileToString(String path) {
     String content = "";
     try {
