@@ -1,6 +1,6 @@
 # CS 178 Project
 
-Our project was to predict emojis associated with tweets. The dataset is taken from Kagle:
+Our project was to predict emojis associated with tweets. The dataset is taken from Kaggle:
 
 https://www.kaggle.com/hariharasudhanas/twitter-emoji-prediction
 
